@@ -1,20 +1,25 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 
-Adafruit_ADS1115 ads;  /* Use this for the 16-bit version */
-// Adafruit_ADS1015 ads;     /* Use this for the 12-bit version */
+// Adafruit_ADS1115 ads;  /* Use this for the 16-bit version */
+Adafruit_ADS1015 ads;     /* Use thi for the 12-bit version */
 
 void setup(void) 
 {
+  // Vext ON
+  pinMode(Vext, OUTPUT);
+  digitalWrite(Vext, LOW);
+  delay(10);
+
+  // Initialize Serial port
   Serial.begin(115200);
-  Serial.println("Hello!");
-  
+  Serial.println();
+  Serial.println(F("-----------------------"));
+  Serial.println(F("ADS1x15 - 4 channel ADC"));
+  Serial.println(F("-----------------------"));
+
   Serial.println("Getting single-ended readings from AIN0..3");
   Serial.println("ADC Range: +/- 6.144V (1 bit = 3mV/ADS1015, 0.1875mV/ADS1115)");
-
-  pinMode(Vext, OUTPUT);
-  digitalWrite(Vext, LOW); //set vext to high
-  delay(500);
   
   // The ADC input range (or gain) can be changed via the following
   // functions, but be careful never to exceed VDD +0.3V max, or to
@@ -36,18 +41,14 @@ void loop(void)
 {
   int16_t adc0, adc1, adc2, adc3;
 
-  /* Be sure to update this value based on the IC and the gain settings! */
-  //float   multiplier = 3.0F;    /* ADS1015 @ +/- 6.144V gain (12-bit results) */
-  float multiplier = 0.1875F; /* ADS1115  @ +/- 6.144V gain (16-bit results) */
-
   adc0 = ads.readADC_SingleEnded(0);
   adc1 = ads.readADC_SingleEnded(1);
   adc2 = ads.readADC_SingleEnded(2);
   adc3 = ads.readADC_SingleEnded(3);
-  Serial.print("AIN0: "); Serial.println(adc0 * multiplier);
-  Serial.print("AIN1: "); Serial.println(adc1 * multiplier);
-  Serial.print("AIN2: "); Serial.println(adc2 * multiplier);
-  Serial.print("AIN3: "); Serial.println(adc3 * multiplier);
+  Serial.print("AIN0: "); Serial.println(adc0);
+  Serial.print("AIN1: "); Serial.println(adc1);
+  Serial.print("AIN2: "); Serial.println(adc2);
+  Serial.print("AIN3: "); Serial.println(adc3);
   Serial.println(" ");
   
   delay(1000);
